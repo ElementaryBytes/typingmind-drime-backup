@@ -1,1 +1,57 @@
-# TypingMind Cloud Sync for Drime ⚠️ **CRITICAL - READ FIRST:** - [LICENSE](LICENSE) - Legal disclaimers & liability - [SECURITY.md](SECURITY.md) - Security limitations - [TERMS.md](TERMS.md) - Terms of use ## ⚠️ IMPORTANT DISCLAIMERS **Lost encryption keys are UNRECOVERABLE** - We cannot recover them. **We are NOT liable for data loss** - Use at your own risk. **Not suitable for regulated data** - See SECURITY.md before use. ## About This Project This extension was developed with AI assistance (Claude AI) for code implementation and documentation. All code has been reviewed, tested, and verified by the developer for security and correctness. **What AI Helped With:** - Initial code structure and implementation - Documentation and examples - Error handling patterns - Code organization **What the Developer Did:** - Architecture design and planning - Security implementation and review - Encryption key management - Legal disclaimers and compliance - Testing and bug fixes - API integration and validation See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for complete disclosure. ## ✨ Features ### 🔄 Intelligent Sync System - Bidirectional synchronization with Drime - Automatic sync at configurable intervals - Metadata tracking for sync state - Deletion tracking (tombstone system) ### 💾 Backup Management - Manual snapshots anytime - Track sync status and errors - View sync history ### 🔒 Security & Encryption - Client-side AES-256-GCM encryption - Encryption key never leaves your browser - PBKDF2 key derivation (100,000 iterations) - No plaintext storage in cloud ## 🚀 Quick Start ### Prerequisites - Drime account (free at drime.cloud) - TypingMind installed - Modern web browser ### Installation 1. **Get Your Drime API Token** - Go to https://app.drime.cloud/account-settings - Find "Developers" section - Create and copy your API token 2. **Install Extension** - Open TypingMind - Menu → Preferences → Extensions - Paste this URL: ``` https://yourusername.github.io/typingmind-drime-backup/src/drime-sync-ui.js ``` - Click Load 3. **Configure** - Click ☁️ Drime Sync button - Enter API Token - Create encryption key (SAVE THIS - cannot be recovered!) - Click "Save & Start Sync" ## ⚠️ CRITICAL WARNINGS ### Encryption Key Management - **Lost key = Lost data (UNRECOVERABLE)** - Store in password manager - Never share with anyone - Cannot be reset or recovered ### Data Loss Liability - We are NOT liable for any data loss - ALWAYS maintain independent backups - Test restore before relying on this - Use at your own risk ### Not Suitable For - Medical/legal records (HIPAA) - Financial data (PCI-DSS) - Highly classified information - Data where ANY loss is unacceptable ## 🔐 Security See [SECURITY.md](SECURITY.md) for detailed security information. ## 📋 Terms & Legal See [LICENSE](LICENSE) for liability disclaimers. See [TERMS.md](TERMS.md) for terms of use. ## 🤝 Contributing See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines. ## 📝 Acknowledgments Inspired by [TypeMind Cloud Backup](https://github.com/itcon-pty-au/typingmind-cloud-backup) by itcon-pty-au. ## 🆘 Support This is free, volunteer-maintained software. No professional support guarantee. --- ⚠️ **By using this software, you accept all terms in LICENSE and understand the risks in SECURITY.md**
+# TypingMind Cloud Sync for Drime 
+⚠️ **CRITICAL - READ FIRST:** 
+- [LICENSE](LICENSE) - Legal disclaimers & liability
+- [SECURITY.md](SECURITY.md) - Security limitations
+- [TERMS.md](TERMS.md) - Terms of use ##
+⚠️ IMPORTANT DISCLAIMERS 
+**Lost encryption keys are UNRECOVERABLE** 
+- We cannot recover them.
+**We are NOT liable for data loss** - Use at your own risk.
+**Not suitable for regulated data** - See SECURITY.md before use. ## About This Project This extension was developed with AI assistance (Claude AI) for code implementation and documentation. All code has been reviewed, tested, and verified by the developer for security and correctness.
+**What AI Helped With:** - Initial code structure and implementation - Documentation and examples - Error handling patterns - Code organization
+**What the Developer Did:** - Architecture design and planning - Security implementation and review - Encryption key management - Legal disclaimers and compliance - Testing and bug fixes - API integration and validation See [ACKNOWLEDGMENTS.md](ACKNOWLEDGMENTS.md) for complete disclosure. 
+## ✨ Features ### 
+🔄 Intelligent Sync System - Bidirectional synchronization with Drime - Automatic sync at configurable intervals - Metadata tracking for sync state - Deletion tracking (tombstone system) 
+### 💾 Backup Management 
+- Manual snapshots anytime 
+- Track sync status and errors 
+- View sync history 
+### 🔒 Security & Encryption 
+- Client-side AES-256-GCM encryption 
+- Encryption key never leaves your browser 
+- PBKDF2 key derivation (100,000 iterations) 
+- No plaintext storage in cloud 
+
+## 🚀 Quick Start ### Prerequisites 
+- Drime account (free at drime.cloud) 
+- TypingMind installed - Modern web browser 
+### Installation 
+1. **Get Your Drime API Token** - Go to https://app.drime.cloud/account-settings - Find "Developers" section - Create and copy your API token 
+2. **Install Extension** - Open TypingMind - Menu → Preferences → Extensions - Paste this URL: ``` https://yourusername.github.io/typingmind-drime-backup/src/drime-sync-ui.js ``` - Click Load 
+3. **Configure** - Click ☁️ Drime Sync button - Enter API Token - Create encryption key (SAVE THIS - cannot be recovered!) - Click "Save & Start Sync" 
+## ⚠️ CRITICAL WARNINGS ### Encryption Key Management 
+- **Lost key = Lost data (UNRECOVERABLE)** 
+- Store in password manager 
+- Never share with anyone 
+- Cannot be reset or recovered 
+### Data Loss Liability 
+- We are NOT liable for any data loss 
+- ALWAYS maintain independent backups 
+- Test restore before relying on this 
+- Use at your own risk 
+### Not Suitable For 
+- Medical/legal records (HIPAA) 
+- Financial data (PCI-DSS) 
+- Highly classified information 
+- Data where ANY loss is unacceptable 
+## 🔐 Security 
+See [SECURITY.md](SECURITY.md) for detailed security information. 
+## 📋 Terms & Legal 
+See [LICENSE](LICENSE) for liability disclaimers. See [TERMS.md](TERMS.md) for terms of use. 
+## 🤝 Contributing 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines. 
+## 📝 Acknowledgments
+Inspired by [TypeMind Cloud Backup](https://github.com/itcon-pty-au/typingmind-cloud-backup) by itcon-pty-au. 
+## 🆘 Support 
+This is free, volunteer-maintained software. No professional support guarantee. 
+⚠️ **By using this software, you accept all terms in LICENSE and understand the risks in SECURITY.md**
