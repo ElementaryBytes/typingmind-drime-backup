@@ -24,7 +24,8 @@ class DrimeSyncCore {
             lastSync: null
         };
         
-        this.DRIME_API_BASE = 'https://api.drime.cloud';
+        // FIXED: Correct Drime API base URL
+        this.DRIME_API_BASE = 'https://app.drime.cloud/api/v1';
         this.SYNC_FOLDER = 'TypingMindBackup';
         this.METADATA_FILE = 'sync-metadata.json';
         
@@ -56,16 +57,17 @@ class DrimeSyncCore {
      * Test connection to Drime API
      */
     async testConnection() {
-        const response = await fetch(`${this.DRIME_API_BASE}/folders`, {
+        const response = await fetch(`${this.DRIME_API_BASE}/file-entries`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.config.apiToken}`,
-                'Content-Type': 'application/json'
+                'Accept': 'application/json'
             }
         });
 
         if (!response.ok) {
-            throw new Error(`Drime API error: ${response.status} ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Drime API error: ${response.status} - ${errorText}`);
         }
 
         return await response.json();
@@ -208,12 +210,12 @@ class DrimeSyncCore {
      * Get or create the sync folder in Drime
      */
     async getSyncFolder() {
-        // List all folders
-        const response = await fetch(`${this.DRIME_API_BASE}/folders`, {
+        // List all file entries (folders and files)
+        const response = await fetch(`${this.DRIME_API_BASE}/file-entries`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.config.apiToken}`,
-                'Content-Type': 'application/json'
+                'Accept': 'application/json'
             }
         });
 
@@ -221,32 +223,35 @@ class DrimeSyncCore {
             throw new Error(`Failed to list folders: ${response.statusText}`);
         }
 
-        const folders = await response.json();
+        const entries = await response.json();
         
         // Look for existing sync folder
-        const syncFolder = folders.find(f => f.name === this.SYNC_FOLDER);
+        const syncFolder = entries.data?.find(f => f.name === this.SYNC_FOLDER && f.type === 'folder');
         if (syncFolder) {
             return syncFolder.id;
         }
 
         // Create sync folder
-        const createResponse = await fetch(`${this.DRIME_API_BASE}/folders`, {
+        const createResponse = await fetch(`${this.DRIME_API_BASE}/file-entries/folder`, {
             method: 'POST',
             headers: {
                 'Authorization': `Bearer ${this.config.apiToken}`,
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
-                name: this.SYNC_FOLDER
+                name: this.SYNC_FOLDER,
+                parent_id: null
             })
         });
 
         if (!createResponse.ok) {
-            throw new Error(`Failed to create folder: ${createResponse.statusText}`);
+            const errorText = await createResponse.text();
+            throw new Error(`Failed to create folder: ${createResponse.statusText} - ${errorText}`);
         }
 
         const newFolder = await createResponse.json();
-        return newFolder.id;
+        return newFolder.data.id;
     }
 
     /**
@@ -259,18 +264,22 @@ class DrimeSyncCore {
         // Create FormData
         const formData = new FormData();
         formData.append('file', blob, filename);
-        formData.append('folderId', folderId);
+        if (folderId) {
+            formData.append('parent_id', folderId);
+        }
 
-        const response = await fetch(`${this.DRIME_API_BASE}/files/upload`, {
+        const response = await fetch(`${this.DRIME_API_BASE}/file-entries`, {
             method: 'POST',
             headers: {
-                'Authorization': `Bearer ${this.config.apiToken}`
+                'Authorization': `Bearer ${this.config.apiToken}`,
+                'Accept': 'application/json'
             },
             body: formData
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to upload file: ${response.statusText}`);
+            const errorText = await response.text();
+            throw new Error(`Failed to upload file: ${response.statusText} - ${errorText}`);
         }
 
         return await response.json();
@@ -280,7 +289,7 @@ class DrimeSyncCore {
      * Download file from Drime
      */
     async downloadFile(fileId) {
-        const response = await fetch(`${this.DRIME_API_BASE}/files/${fileId}/download`, {
+        const response = await fetch(`${this.DRIME_API_BASE}/file-entries/${fileId}/download`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.config.apiToken}`
@@ -298,11 +307,11 @@ class DrimeSyncCore {
      * List files in folder
      */
     async listFiles(folderId) {
-        const response = await fetch(`${this.DRIME_API_BASE}/folders/${folderId}/files`, {
+        const response = await fetch(`${this.DRIME_API_BASE}/file-entries?parent_id=${folderId}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${this.config.apiToken}`,
-                'Content-Type': 'application/json'
+                'Accept': 'application/json'
             }
         });
 
@@ -310,18 +319,24 @@ class DrimeSyncCore {
             throw new Error(`Failed to list files: ${response.statusText}`);
         }
 
-        return await response.json();
+        const result = await response.json();
+        return result.data || [];
     }
 
     /**
      * Delete file from Drime
      */
     async deleteFile(fileId) {
-        const response = await fetch(`${this.DRIME_API_BASE}/files/${fileId}`, {
-            method: 'DELETE',
+        const response = await fetch(`${this.DRIME_API_BASE}/file-entries/delete`, {
+            method: 'POST',
             headers: {
-                'Authorization': `Bearer ${this.config.apiToken}`
-            }
+                'Authorization': `Bearer ${this.config.apiToken}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                entry_ids: [fileId]
+            })
         });
 
         if (!response.ok) {
@@ -455,13 +470,13 @@ class DrimeSyncCore {
             
             // Filter and sort backups
             const backups = files
-                .filter(f => f.name.startsWith('backup-') && f.name.endsWith('.enc'))
+                .filter(f => f.name && f.name.startsWith('backup-') && f.name.endsWith('.enc'))
                 .map(f => ({
                     id: f.id,
                     name: f.name,
-                    size: f.size,
-                    created: f.createdAt,
-                    modified: f.updatedAt
+                    size: f.file_size || 0,
+                    created: f.created_at,
+                    modified: f.updated_at
                 }))
                 .sort((a, b) => new Date(b.created) - new Date(a.created));
             
