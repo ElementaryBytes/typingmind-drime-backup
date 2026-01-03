@@ -19,7 +19,7 @@
 
     // Load the core sync engine
     const script = document.createElement('script');
-    script.src = 'https://yourusername.github.io/typingmind-drime-backup/src/drime-sync-core.js';
+    script.src = 'https://ElementaryBytes.github.io/typingmind-drime-backup/src/drime-sync-core.js';
     document.head.appendChild(script);
 
     // Wait for core to load
